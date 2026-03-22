@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — SwiftNote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0f0e0c;
+  --bg2:      #141310;
+  --surface:  #1a1916;
+  --surface2: #232220;
+  --border:   #2e2c28;
+  --border2:  #3d3a35;
+  --accent:   #e8c87d;
+  --accent2:  #c97b4b;
+  --text:     #f0ece3;
+  --text2:    #a09a90;
+  --text3:    #5a5650;
+  --green:    #7bc97b;
+  --red:      #d96b6b;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-ui:      'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+}
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
+  height: 68px;
+  background: rgba(15,14,12,0.90);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+}
+
+.nav-logo { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--accent); text-decoration: none; }
+.nav-logo span { color: var(--accent2); }
+
+.nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+.nav-links a { font-size: 13px; font-weight: 500; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--accent); }
+.nav-cta { background: var(--accent) !important; color: var(--bg) !important; padding: 8px 20px !important; border-radius: 6px !important; font-weight: 600 !important; font-size: 13px !important; }
+.nav-cta:hover { background: var(--accent2) !important; }
+
+.page-hero {
+  padding: 140px 56px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 50% 30%, rgba(232,200,125,0.05) 0%, transparent 70%);
+}
+
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(232,200,125,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,200,125,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.page-hero-inner { position: relative; z-index: 1; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(232,200,125,0.08);
+  border: 1px solid rgba(232,200,125,0.20);
+  padding: 6px 14px;
+  border-radius: 100px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  color: var(--text);
+  margin-bottom: 16px;
+  animation: fadeUp 0.5s ease 0.1s both;
+}
+.page-title em { font-style: normal; color: var(--accent); }
+
+.page-sub {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.75;
+  max-width: 480px;
+  margin: 0 auto;
+  animation: fadeUp 0.5s ease 0.2s both;
+}
+
+.page-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 16px;
+  animation: fadeUp 0.5s ease 0.3s both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+main { flex: 1; padding: 40px 56px 100px; }
+
+.policy-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Summary cards at top */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 18px;
+  text-align: center;
+  animation: fadeUp 0.5s ease 0.2s both;
+}
+
+.summary-card-icon { font-size: 22px; margin-bottom: 10px; }
+.summary-card-title { font-weight: 700; font-size: 13px; color: var(--text); margin-bottom: 5px; }
+.summary-card-text { font-size: 12px; color: var(--text3); line-height: 1.5; }
+
+/* Policy sections */
+.policy-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  animation: fadeUp 0.5s ease 0.3s both;
+  transition: border-color 0.2s;
+}
+.policy-card:hover { border-color: var(--border2); }
+
+.policy-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.policy-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(232,200,125,0.10);
+  border: 1px solid rgba(232,200,125,0.20);
+  padding: 3px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.policy-card-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  flex: 1;
+  letter-spacing: -0.2px;
+}
+
+.policy-card-body {
+  padding: 24px;
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.8;
+}
+
+.policy-card-body strong { color: var(--text); }
+.policy-card-body a { color: var(--accent); text-decoration: none; }
+.policy-card-body a:hover { color: var(--accent2); }
+
+.policy-card-body ul {
+  margin: 12px 0 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.policy-card-body li { color: var(--text2); }
+
+.highlight-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin: 14px 0;
+  font-size: 13px;
+  color: var(--green);
+  font-weight: 500;
+}
+
+.perm-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.perm-row:last-child { border-bottom: none; }
+.perm-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(232,200,125,0.08);
+  border: 1px solid rgba(232,200,125,0.15);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.perm-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-logo { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--accent); text-decoration: none; }
+.footer-logo span { color: var(--accent2); }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a { font-size: 13px; color: var(--text3); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--text2); }
+.footer-copy { font-family: var(--font-mono); font-size: 11px; color: var(--text3); }
+
+@media (max-width: 768px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .page-hero, main { padding-left: 24px; padding-right: 24px; }
+  .summary-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Swift<span>Note</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#features">Features</a></li>
+    <li><a href="index.html#tools">Tools</a></li>
+    <li><a href="index.html#translate">Translate</a></li>
+    <li><a href="privacy.html" class="active">Privacy</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="#" class="nav-cta">Add to Chrome →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="hero-grid"></div>
+  <div class="page-hero-inner">
+    <div class="eyebrow">Legal</div>
+    <h1 class="page-title">Privacy <em>Policy</em></h1>
+    <p class="page-sub">We built SwiftNote with privacy as a core principle. Here's exactly what we do — and don't do — with your data.</p>
+    <p class="page-date">Last updated: March 2026</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="policy-wrap">
+
+    <!-- Summary -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-card-icon">🔒</div>
+        <div class="summary-card-title">Zero Data Collected</div>
+        <div class="summary-card-text">We collect absolutely nothing from you</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-icon">💾</div>
+        <div class="summary-card-title">Local Only</div>
+        <div class="summary-card-text">Your notes never leave your device</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-icon">🚫</div>
+        <div class="summary-card-title">No Ads Ever</div>
+        <div class="summary-card-text">No tracking, no profiling, no ads</div>
+      </div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="policy-card">
+      <div class="policy-card-header">
+        <span class="policy-num">01</span>
+        <div class="policy-card-title">Introduction</div>
+      </div>
+      <div class="policy-card-body">
+        SwiftNote ("we", "our", "the extension") is a free Chrome browser extension providing note-taking, drawing, image editing, and translation features. This Privacy Policy describes how we handle information in connection with the extension. By installing and using SwiftNote, you agree to this policy.
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="policy-card">
+      <div class="policy-card-header">
+        <span class="policy-num">02</span>
+        <div class="policy-card-title">Data We Collect</div>
+      </div>
+      <div class="policy-card-body">
+        <div class="highlight-box">✓ We collect zero personal data. No backend. No database. No server receives your information.</div>
+        SwiftNote has no analytics, no tracking pixels, no crash reporters, and no telemetry of any kind. We genuinely do not know who uses our extension or how they use it.
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="policy-card">
+      <div class="policy-card-header">
+        <span class="policy-num">03</span>
+        <div class="policy-card-title">Local Storage</div>
+      </div>
+      <div class="policy-card-body">
+        SwiftNote uses your browser's built-in <strong>local storage API</strong> to save the following — entirely on your device:
+        <ul>
+          <li><strong>Your notes</strong> — text content you write in the Notes tab</li>
+          <li><strong>Theme preference</strong> — whether you prefer dark or light mode</li>
+          <li><strong>Language settings</strong> — your last selected translation languages</li>
+        </ul>
+        None of this data is ever transmitted anywhere. Uninstalling the extension permanently removes all locally stored data.
+      </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="policy-card">
+      <div class="policy-card-header">
+        <span class="policy-num">04</span>
+        <div class="policy-card-title">Third-Party Services</div>
+      </div>
+      <div class="policy-card-body">
+        SwiftNote uses <strong>one</strong> third-party service:
+        <br><br>
+        <strong>Google Translate API</strong> (translate.googleapis.com) — contacted <em>only</em> when you explicitly click the "Translate" button. The text you entered for translation is sent to Google's servers to retrieve a translation. This is subject to <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>.
+        <br><br>
+        No other external services, APIs, CDNs, or servers are contacted at any time.
+      </div>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="policy-card">
+      <div class="policy-card-header">
+        <span class="policy-num">05</span>
+        <div class="policy-card-title">Permissions Explained</div>
+      </div>
+      <div class="policy-card-body">
+        <div class="perm-row">
+          <span class="perm-name">storage</span>
+          <span class="perm-desc">Saves your notes, theme preference, and language settings locally in your browser.</span>
+        </div>
+        <div class="perm-row">
+          <span class="perm-name">activeTab</span>
+          <span class="perm-desc">Used only to navigate the current browser tab to our website when a non-English user clicks the extension icon.</span>
+        </div>
+        <div class="perm-row">
+          <span class="perm-name">clipboardWrite</span>
+          <span class="perm-desc">Allows you to copy translated text to your clipboard with a single click. Nothing is read from your clipboard.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6 -->
+    <div class="policy-card">
+      <div class="policy-card-header">
+        <span class="policy-num">06</span>
+        <div class="policy-card-title">Children's Privacy</div>
+      </div>
+      <div class="policy-card-body">
+        SwiftNote does not knowingly collect any data from anyone, including children under the age of 13. Since we collect no data whatsoever, our extension poses no privacy risk to minors.
+      </div>
+    </div>
+
+    <!-- Section 7 -->
+    <div class="policy-card">
+      <div class="policy-card-header">
+        <span class="policy-num">07</span>
+        <div class="policy-card-title">Changes to This Policy</div>
+      </div>
+      <div class="policy-card-body">
+        We may update this Privacy Policy occasionally. Any changes will be reflected on this page with an updated date at the top. Continued use of the extension after any changes constitutes your acceptance of the revised policy.
+      </div>
+    </div>
+
+    <!-- Section 8 -->
+    <div class="policy-card">
+      <div class="policy-card-header">
+        <span class="policy-num">08</span>
+        <div class="policy-card-title">Contact</div>
+      </div>
+      <div class="policy-card-body">
+        If you have any questions about this Privacy Policy or SwiftNote's data practices, please reach out through our <a href="contact.html">Contact page</a>. We respond within 24 hours on business days.
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo">Swift<span>Note</span></a>
+  <ul class="footer-links">
+    <li><a href="index.html#features">Features</a></li>
+    <li><a href="index.html#tools">Tools</a></li>
+    <li><a href="privacy.html">Privacy Policy</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 SwiftNote. All rights reserved.</div>
+</footer>
+
+</body>
+</html>

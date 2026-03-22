@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SwiftNote — All-in-One Browser Productivity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0f0e0c;
+  --bg2:      #141310;
+  --surface:  #1a1916;
+  --surface2: #232220;
+  --border:   #2e2c28;
+  --border2:  #3d3a35;
+  --accent:   #e8c87d;
+  --accent2:  #c97b4b;
+  --accent3:  #f0ece3;
+  --text:     #f0ece3;
+  --text2:    #a09a90;
+  --text3:    #5a5650;
+  --green:    #7bc97b;
+  --red:      #d96b6b;
+  --blue:     #6b9fd9;
+  --purple:   #a67bd9;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-ui:      'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── TEXTURE ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
+  height: 68px;
+  background: rgba(15,14,12,0.90);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+}
+
+.nav-logo span { color: var(--accent2); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.nav-cta {
+  background: var(--accent) !important;
+  color: var(--bg) !important;
+  padding: 8px 20px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  transition: all 0.2s !important;
+}
+
+.nav-cta:hover {
+  background: var(--accent2) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 56px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 40%, rgba(232,200,125,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(201,123,75,0.04) 0%, transparent 60%);
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232,200,125,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,200,125,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-left { display: flex; flex-direction: column; gap: 28px; }
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  background: rgba(232,200,125,0.08);
+  border: 1px solid rgba(232,200,125,0.20);
+  padding: 6px 14px;
+  border-radius: 100px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: fit-content;
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+
+.hero-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 5.5vw, 72px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--text);
+  animation: fadeUp 0.6s ease 0.2s both;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--text2);
+  line-height: 1.75;
+  max-width: 440px;
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: fadeUp 0.6s ease 0.4s both;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(232,200,125,0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+}
+
+.btn-primary:hover {
+  background: var(--accent2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(232,200,125,0.35);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  background: transparent;
+  color: var(--text2);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  text-decoration: none;
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: rgba(232,200,125,0.05);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  animation: fadeUp 0.6s ease 0.5s both;
+}
+
+.h-stat-val {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+}
+
+.h-stat-label {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 3px;
+}
+
+/* ── POPUP MOCKUP ── */
+.hero-right { animation: fadeUp 0.6s ease 0.3s both; }
+
+.popup-mockup {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(232,200,125,0.08);
+  transform: perspective(1000px) rotateY(-6deg) rotateX(3deg);
+  transition: transform 0.4s ease;
+}
+
+.popup-mockup:hover {
+  transform: perspective(1000px) rotateY(-2deg) rotateX(1deg);
+}
+
+.pm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.pm-logo {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--accent);
+}
+.pm-logo span { color: var(--accent2); }
+
+.pm-tabs {
+  display: flex;
+  gap: 3px;
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.pm-tab {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--text3);
+  font-weight: 500;
+}
+
+.pm-tab.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.pm-body {
+  padding: 14px 16px;
+  min-height: 200px;
+}
+
+.pm-toolbar {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.pm-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+}
+
+.pm-dots { display: flex; gap: 4px; align-items: center; }
+.pm-dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid transparent; cursor: pointer; }
+
+.pm-textarea {
+  width: 100%;
+  background: var(--surface);
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  color: var(--text2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  min-height: 100px;
+}
+
+.pm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-top: 1px solid var(--border);
+}
+
+.pm-save {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 5px;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pm-count { font-family: var(--font-mono); font-size: 10px; color: var(--text3); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTIONS ── */
+section { position: relative; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 56px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.section-title em { font-style: normal; color: var(--accent); }
+
+.section-sub {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.75;
+  max-width: 460px;
+}
+
+/* ── FEATURES ── */
+.features { padding: 120px 0; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 64px;
+}
+
+.feat-card {
+  background: var(--surface);
+  padding: 36px 32px;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.feat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.feat-card:hover { background: var(--bg2); }
+.feat-card:hover::before { transform: scaleX(1); }
+
+.feat-icon {
+  font-size: 28px;
+  margin-bottom: 18px;
+  display: block;
+}
+
+.feat-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+  margin-bottom: 10px;
+}
+
+.feat-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.feat-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--accent);
+  background: rgba(232,200,125,0.08);
+  border: 1px solid rgba(232,200,125,0.15);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 14px;
+}
+
+/* ── TOOLS SHOWCASE ── */
+.tools-section { padding: 80px 0 120px; }
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 64px;
+}
+
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 22px;
+  text-align: center;
+  transition: all 0.25s;
+  cursor: default;
+}
+
+.tool-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.tool-emoji {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.tool-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.tool-desc {
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.6;
+}
+
+/* ── TRANSLATOR HIGHLIGHT ── */
+.translator-section {
+  padding: 80px 0 120px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.translator-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.lang-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 32px;
+}
+
+.lang-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 100px;
+  transition: all 0.2s;
+}
+
+.lang-pill:hover {
+  color: var(--accent);
+  border-color: rgba(232,200,125,0.3);
+  background: rgba(232,200,125,0.05);
+}
+
+.lang-pill.featured {
+  color: var(--accent);
+  border-color: rgba(232,200,125,0.25);
+  background: rgba(232,200,125,0.06);
+}
+
+/* Translate mockup */
+.tr-mockup {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+}
+
+.tr-mock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.tr-mock-sel {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-family: var(--font-ui);
+}
+
+.tr-mock-swap {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  border-radius: 6px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+
+.tr-mock-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+
+.tr-mock-area {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.6;
+  min-height: 60px;
+}
+
+.tr-mock-area.result { color: var(--text); border-color: var(--border2); }
+
+.tr-mock-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  font-family: var(--font-ui);
+}
+
+/* ── PRIVACY ── */
+.privacy-section {
+  padding: 120px 0;
+}
+
+.privacy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 56px;
+}
+
+.privacy-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 24px;
+}
+
+.privacy-icon { font-size: 24px; margin-bottom: 14px; }
+
+.privacy-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.privacy-text {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* Privacy Policy full */
+.policy-section {
+  padding: 80px 0 120px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+
+.policy-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 56px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.policy-item {
+  padding: 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-top: 16px;
+}
+
+.policy-item-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.policy-item-text {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.policy-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 24px;
+}
+
+/* ── CTA ── */
+.cta-section {
+  padding: 120px 0;
+  text-align: center;
+}
+
+.cta-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 80px 48px;
+  position: relative;
+  overflow: hidden;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20%; right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.cta-box::after {
+  content: '';
+  position: absolute;
+  top: -150px; left: 50%;
+  transform: translateX(-50%);
+  width: 400px; height: 300px;
+  background: radial-gradient(circle, rgba(232,200,125,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-box h2 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.cta-box h2 em { font-style: normal; color: var(--accent); }
+
+.cta-box p {
+  font-size: 15px;
+  color: var(--text2);
+  margin-bottom: 36px;
+  position: relative;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 48px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+}
+.footer-logo span { color: var(--accent2); }
+
+.footer-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 13px;
+  color: var(--text3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text2); }
+
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .container { padding: 0 24px; }
+  .hero { padding: 100px 24px 60px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-right { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .translator-inner { grid-template-columns: 1fr; }
+  .privacy-grid { grid-template-columns: 1fr; }
+  .policy-box { padding: 32px 24px; }
+  .cta-box { padding: 48px 24px; }
+  footer { flex-direction: column; gap: 20px; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+  .hero-stats { flex-direction: column; gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Swift<span>Note</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#translate">Translate</a></li>
+    <li><a href="privacy.html">Privacy</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="#" class="nav-cta">Add to Chrome →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag">Free Chrome Extension</div>
+      <h1>Your all-in-one<br><em>productivity</em><br>workspace</h1>
+      <p class="hero-sub">
+        Notes, sketching, image editing, and translation in 53 languages —
+        all in one click, directly in your browser. No sign-in required.
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary">
+          ➕ Add to Chrome — Free
+        </a>
+        <a href="#features" class="btn-secondary">
+          See Features →
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <span class="h-stat-val">53</span>
+          <span class="h-stat-label">Languages</span>
+        </div>
+        <div>
+          <span class="h-stat-val">4</span>
+          <span class="h-stat-label">Built-in Tools</span>
+        </div>
+        <div>
+          <span class="h-stat-val">0</span>
+          <span class="h-stat-label">Sign-ins needed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="popup-mockup">
+        <div class="pm-header">
+          <div class="pm-logo">Swift<span>Note</span></div>
+          <div class="pm-tabs">
+            <div class="pm-tab active">✏️ Notes</div>
+            <div class="pm-tab">🎨 Draw</div>
+            <div class="pm-tab">🖼️ Image</div>
+            <div class="pm-tab">🌍 Translate</div>
+          </div>
+        </div>
+        <div class="pm-body">
+          <div class="pm-toolbar">
+            <div class="pm-btn">B</div>
+            <div class="pm-btn" style="font-style:italic">I</div>
+            <div class="pm-btn" style="text-decoration:underline">U</div>
+            <div class="pm-dots">
+              <div class="pm-dot" style="background:#f0ece3;border-color:#fff"></div>
+              <div class="pm-dot" style="background:#e8c87d"></div>
+              <div class="pm-dot" style="background:#d96b6b"></div>
+              <div class="pm-dot" style="background:#7bc97b"></div>
+              <div class="pm-dot" style="background:#6b9fd9"></div>
+            </div>
+          </div>
+          <div class="pm-textarea">
+            Meeting notes — Q2 planning
+            • Review budget allocations
+            • Confirm team assignments
+            • Set milestone deadlines
+            • Schedule follow-ups
+          </div>
+        </div>
+        <div class="pm-footer">
+          <div class="pm-count">128 chars</div>
+          <div class="pm-save">Save</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="eyebrow">Why SwiftNote</div>
+    <h2 class="section-title">Everything you need,<br><em>one click away</em></h2>
+    <p class="section-sub">Four powerful tools built into a single lightweight browser extension. No clutter, no subscriptions.</p>
+
+    <div class="features-grid">
+      <div class="feat-card">
+        <span class="feat-icon">✏️</span>
+        <div class="feat-title">Smart Notes</div>
+        <div class="feat-desc">Rich text formatting with bold, italic, underline, and color highlighting. Auto-saves every 10 seconds directly in your browser — private and offline.</div>
+        <div class="feat-tag">Auto-save</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🎨</span>
+        <div class="feat-title">Drawing Canvas</div>
+        <div class="feat-desc">Sketch ideas with pen, eraser, line, rectangle, and circle tools. Full color palette, adjustable brush size, undo history, and PNG export.</div>
+        <div class="feat-tag">PNG Export</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🖼️</span>
+        <div class="feat-title">Image Editor</div>
+        <div class="feat-desc">Drop any image and adjust brightness, contrast, saturation, blur and apply filters like B&W, Sepia, or Invert. Download the result instantly.</div>
+        <div class="feat-tag">Non-destructive</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🌍</span>
+        <div class="feat-title">Instant Translator</div>
+        <div class="feat-desc">Translate text between 53 languages with auto-detection. Swap source and target languages, copy results to clipboard with one click.</div>
+        <div class="feat-tag">53 Languages</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="tools-section" id="tools">
+  <div class="container">
+    <div class="eyebrow">Built-in Tools</div>
+    <h2 class="section-title">Four tools.<br><em>One extension.</em></h2>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <span class="tool-emoji">✏️</span>
+        <div class="tool-name">Notes</div>
+        <div class="tool-desc">Rich text editor with formatting and color coding</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-emoji">🎨</span>
+        <div class="tool-name">Draw</div>
+        <div class="tool-desc">Canvas with multiple tools and undo history</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-emoji">🖼️</span>
+        <div class="tool-name">Image</div>
+        <div class="tool-desc">Drag & drop editor with filters and export</div>
+      </div>
+      <div class="tool-card">
+        <span class="tool-emoji">🌍</span>
+        <div class="tool-name">Translate</div>
+        <div class="tool-desc">53 languages with auto-detection</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSLATOR -->
+<section class="translator-section" id="translate">
+  <div class="container">
+    <div class="translator-inner">
+      <div>
+        <div class="eyebrow">Instant Translation</div>
+        <h2 class="section-title">53 languages.<br><em>Zero effort.</em></h2>
+        <p class="section-sub">
+          Auto-detect the source language, translate instantly, and copy the result with one click. Powered by Google Translate API — no API key needed.
+        </p>
+        <div class="lang-pills">
+          <div class="lang-pill featured">English</div>
+          <div class="lang-pill featured">العربية</div>
+          <div class="lang-pill featured">Français</div>
+          <div class="lang-pill featured">Español</div>
+          <div class="lang-pill featured">中文</div>
+          <div class="lang-pill featured">日本語</div>
+          <div class="lang-pill">Deutsch</div>
+          <div class="lang-pill">Русский</div>
+          <div class="lang-pill">Português</div>
+          <div class="lang-pill">한국어</div>
+          <div class="lang-pill">Italiano</div>
+          <div class="lang-pill">हिंदी</div>
+          <div class="lang-pill">Türkçe</div>
+          <div class="lang-pill">Polski</div>
+          <div class="lang-pill">+ 39 more…</div>
+        </div>
+      </div>
+
+      <div class="tr-mockup">
+        <div class="tr-mock-header">
+          <div class="tr-mock-sel">🔍 Auto Detect</div>
+          <div class="tr-mock-swap">⇄</div>
+          <div class="tr-mock-sel">Français</div>
+        </div>
+        <div class="tr-mock-body">
+          <div class="tr-mock-area">The quick brown fox jumps over the lazy dog.</div>
+          <div class="tr-mock-area result">Le rapide renard brun saute par-dessus le chien paresseux.</div>
+          <div class="tr-mock-btn">🌍 Translate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="privacy-section" id="privacy">
+  <div class="container">
+    <div class="eyebrow">Privacy First</div>
+    <h2 class="section-title">Your data stays<br><em>yours. Always.</em></h2>
+    <p class="section-sub">SwiftNote is built with privacy as a core principle — not an afterthought.</p>
+
+    <div class="privacy-grid">
+      <div class="privacy-card">
+        <div class="privacy-icon">🔒</div>
+        <div class="privacy-title">Zero Data Collection</div>
+        <div class="privacy-text">We collect nothing. No account, no tracking, no analytics. Your notes and drawings never leave your device.</div>
+      </div>
+      <div class="privacy-card">
+        <div class="privacy-icon">💾</div>
+        <div class="privacy-title">Local Storage Only</div>
+        <div class="privacy-text">Notes are saved using your browser's local storage. Only your theme preference is remembered — nothing else.</div>
+      </div>
+      <div class="privacy-card">
+        <div class="privacy-icon">🌐</div>
+        <div class="privacy-title">Translation Only</div>
+        <div class="privacy-text">The only external request is to Google Translate API when you explicitly click Translate. No background calls, ever.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY POLICY -->
+<section class="policy-section">
+  <div class="container">
+    <div class="policy-box">
+      <div class="eyebrow">Privacy Policy</div>
+      <h2 class="section-title" style="font-size:28px">SwiftNote Privacy Policy</h2>
+
+      <div class="policy-item">
+        <div class="policy-item-title">📊 Data We Use</div>
+        <div class="policy-item-text">SwiftNote uses the Google Translate public API (translate.googleapis.com) only when you explicitly click the Translate button. No personal information is sent — only the text you type for translation.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">🔒 Data We Collect</div>
+        <div class="policy-item-text"><strong>None.</strong> We do not collect, store, transmit, or share any personal data. No accounts, no tracking, no analytics of any kind.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">💾 Local Storage</div>
+        <div class="policy-item-text">Your notes are saved in your browser's local storage and never leave your device. Only your theme preference (dark/light) is remembered locally.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">🛡️ Permissions Used</div>
+        <div class="policy-item-text">
+          <strong>storage</strong> — saves notes and theme preference locally.<br>
+          <strong>activeTab</strong> — used only when you click the extension icon.<br>
+          <strong>clipboardWrite</strong> — lets you copy translated text with one click.
+        </div>
+      </div>
+
+      <div class="policy-date">Last updated: March 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Start being more<br><em>productive</em> today</h2>
+      <p>Free forever. No account. One click to install.</p>
+      <a href="#" class="btn-primary" style="font-size:15px;padding:16px 36px;display:inline-flex;">
+        ➕ Add to Chrome — It's Free
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY POLICY FULL PAGE -->
+<section class="policy-section" id="privacy-policy" style="padding: 120px 0; background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="policy-box">
+      <div class="eyebrow">Legal</div>
+      <h2 class="section-title" style="font-size:36px; margin-bottom:8px;">Privacy Policy</h2>
+      <p style="font-size:14px; color:var(--text3); font-family:var(--font-mono); margin-bottom:36px;">SwiftNote Chrome Extension — Last updated: March 2026</p>
+
+      <div class="policy-item">
+        <div class="policy-item-title">1. Introduction</div>
+        <div class="policy-item-text">SwiftNote ("we", "our", "the extension") is a free Chrome browser extension that provides note-taking, drawing, image editing, and translation features. This Privacy Policy explains what data we handle and how we handle it. By using SwiftNote, you agree to this policy.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">2. Data We Collect</div>
+        <div class="policy-item-text"><strong style="color:var(--green)">None.</strong> SwiftNote does not collect, store on our servers, transmit, or share any personal data, usage data, or analytics of any kind. We have no backend, no database, and no server that receives your data.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">3. Local Storage</div>
+        <div class="policy-item-text">SwiftNote uses your browser's local storage API exclusively to save:<br><br>
+        • <strong style="color:var(--text)">Your notes</strong> — stored locally in your browser, never transmitted<br>
+        • <strong style="color:var(--text)">Theme preference</strong> — dark or light mode setting<br>
+        • <strong style="color:var(--text)">Language preferences</strong> — last used translation languages<br><br>
+        All of this data remains entirely on your device and can be cleared at any time by removing the extension.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">4. Third-Party Services</div>
+        <div class="policy-item-text">SwiftNote uses one third-party service:<br><br>
+        <strong style="color:var(--text)">Google Translate API</strong> (translate.googleapis.com) — used only when you explicitly click the "Translate" button. Only the text you type is sent to Google for translation. This is subject to <a href="https://policies.google.com/privacy" style="color:var(--accent)">Google's Privacy Policy</a>. No other data is shared with any third party.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">5. Permissions Explained</div>
+        <div class="policy-item-text">
+        <strong style="color:var(--text)">storage</strong> — to save your notes and preferences locally in your browser.<br>
+        <strong style="color:var(--text)">activeTab</strong> — to navigate the current tab to our website when you click the extension icon (non-English users only).<br>
+        <strong style="color:var(--text)">clipboardWrite</strong> — to let you copy translated text to your clipboard with one click.
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">6. Children's Privacy</div>
+        <div class="policy-item-text">SwiftNote does not knowingly collect any data from children under 13. Since we collect no data at all, there is no risk to children's privacy.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">7. Changes to This Policy</div>
+        <div class="policy-item-text">We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated date. Continued use of the extension after changes constitutes acceptance of the new policy.</div>
+      </div>
+
+      <div class="policy-item">
+        <div class="policy-item-title">8. Contact</div>
+        <div class="policy-item-text">If you have any questions about this Privacy Policy, please contact us using the form below or via the contact section on this page.</div>
+      </div>
+
+      <div class="policy-date">© 2026 SwiftNote. All rights reserved.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="padding: 120px 0; background: var(--bg);">
+  <div class="container">
+    <div style="max-width: 640px; margin: 0 auto;">
+      <div class="eyebrow">Get in Touch</div>
+      <h2 class="section-title">Contact <em>Us</em></h2>
+      <p class="section-sub" style="margin-bottom: 48px;">Have a question, found a bug, or want to suggest a feature? We'd love to hear from you.</p>
+
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 40px; position: relative; overflow: hidden;">
+
+        <div style="position:absolute; top:0; left:20%; right:20%; height:1px; background: linear-gradient(90deg, transparent, var(--accent), transparent);"></div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <label style="display:block; font-size:12px; font-weight:600; color:var(--text2); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.06em;">Name</label>
+              <input type="text" placeholder="Your name"
+                style="width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:11px 14px; font-size:13px; font-family:var(--font-ui); outline:none; transition:border-color 0.2s;"
+                onfocus="this.style.borderColor='var(--accent)'"
+                onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div>
+              <label style="display:block; font-size:12px; font-weight:600; color:var(--text2); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.06em;">Email</label>
+              <input type="email" placeholder="your@email.com"
+                style="width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:11px 14px; font-size:13px; font-family:var(--font-ui); outline:none; transition:border-color 0.2s;"
+                onfocus="this.style.borderColor='var(--accent)'"
+                onblur="this.style.borderColor='var(--border)'">
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:var(--text2); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.06em;">Subject</label>
+            <select style="width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:11px 14px; font-size:13px; font-family:var(--font-ui); outline:none; cursor:pointer; appearance:none;">
+              <option value="">Select a topic…</option>
+              <option>Bug Report</option>
+              <option>Feature Request</option>
+              <option>Privacy Question</option>
+              <option>General Question</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:var(--text2); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.06em;">Message</label>
+            <textarea placeholder="Tell us what's on your mind…" rows="5"
+              style="width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:11px 14px; font-size:13px; font-family:var(--font-mono); outline:none; resize:none; line-height:1.7; transition:border-color 0.2s;"
+              onfocus="this.style.borderColor='var(--accent)'"
+              onblur="this.style.borderColor='var(--border)'"></textarea>
+          </div>
+
+          <button onclick="handleContact(this)"
+            style="width:100%; background:var(--accent); color:var(--bg); border:none; border-radius:8px; padding:14px; font-size:14px; font-weight:700; cursor:pointer; font-family:var(--font-ui); transition:all 0.2s; position:relative; overflow:hidden;"
+            onmouseover="this.style.background='var(--accent2)'"
+            onmouseout="this.style.background='var(--accent)'">
+            Send Message →
+          </button>
+
+          <div id="contact-success" style="display:none; text-align:center; padding:14px; background:rgba(123,201,123,0.10); border:1px solid rgba(123,201,123,0.25); border-radius:8px; color:var(--green); font-size:13px; font-weight:600;">
+            ✓ Message sent! We'll get back to you shortly.
+          </div>
+
+        </div>
+
+        <!-- Info cards -->
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:32px; padding-top:28px; border-top:1px solid var(--border);">
+          <div style="text-align:center; padding:16px 12px; background:var(--bg2); border:1px solid var(--border); border-radius:10px;">
+            <div style="font-size:20px; margin-bottom:8px;">⚡</div>
+            <div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">Fast Reply</div>
+            <div style="font-size:11px; color:var(--text3);">Within 24 hours</div>
+          </div>
+          <div style="text-align:center; padding:16px 12px; background:var(--bg2); border:1px solid var(--border); border-radius:10px;">
+            <div style="font-size:20px; margin-bottom:8px;">🔒</div>
+            <div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">Confidential</div>
+            <div style="font-size:11px; color:var(--text3);">Your data is safe</div>
+          </div>
+          <div style="text-align:center; padding:16px 12px; background:var(--bg2); border:1px solid var(--border); border-radius:10px;">
+            <div style="font-size:20px; margin-bottom:8px;">💬</div>
+            <div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">Real Support</div>
+            <div style="font-size:11px; color:var(--text3);">Human responses</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function handleContact(btn) {
+  btn.textContent = 'Sending…';
+  btn.style.opacity = '0.7';
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('contact-success').style.display = 'block';
+  }, 1200);
+}
+</script>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Swift<span>Note</span></a>
+  <ul class="footer-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#translate">Translate</a></li>
+    <li><a href="privacy.html">Privacy Policy</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 SwiftNote. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
